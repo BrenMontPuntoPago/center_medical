@@ -6,6 +6,31 @@ from psycopg2.errors import UniqueViolation
 
 class Query(Connection):
 
+    # --------------- CONSUMO A QUERY DE BASE DE DATOS --------------------
+
+    def mostrar(self):
+        cnx = self.connect()
+        cursor = cnx.cursor()
+        # Define el inicio de la query
+        try:
+            query = f"""SELECT *
+FROM paciente
+INNER JOIN  diagnostico ON diagnostico.fk_pac_id= paciente.pk_pac_id
+INNER JOIN paciente_doctor ON paciente_doctor.pk_pac_id= paciente.pk_pac_id
+INNER JOIN doctor ON paciente_doctor.pk_doctor_id= doctor.pk_doctor_id
+INNER JOIN especializacion ON especializacion.fk_doctor= doctor.pk_doctor_id
+
+;"""
+            cursor.execute(query)
+            cnx.commit()
+            lista = [dict((cursor.description[i][0], value)
+                          for i, value in enumerate(row)) for row in cursor.fetchall()]
+            self.closeConnection(cnx)
+            return lista
+        except Exception as e:
+            print(e)
+            return "prueba"
+
     def insertar(self, tabla ,datoModificar):
         cnx = self.connect()
         cursor = cnx.cursor()

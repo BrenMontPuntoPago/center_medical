@@ -10,6 +10,7 @@ query_helper = Query()
 
 
 
+
 def get_pasillos():
     try:
         query = query_helper.get_pasillos()
