@@ -371,7 +371,7 @@ def placeHolder():
         return jsonify(query)
     except:
         return jsonify("Fallo query")
-        
+     
 def placeHolderInsert():
     try:
         datos= request.json
