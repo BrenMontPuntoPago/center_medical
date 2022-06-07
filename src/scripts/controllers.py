@@ -118,7 +118,7 @@ def get_pasillos():
 
 def doctor():
     try:
-        query = query_helper.doctor()
+        query = query_helper.buscarDoctor()
         print(query)
         return jsonify(query)
         
@@ -203,8 +203,6 @@ def cruDoctor():
 
 def cruEspecializacion():
     if request.method == "POST":
-        return doctorInsert()
-    elif request.method == "GET":
-        return doctor()
+        return especializacionInsert()
     elif request.method == "PUT":
         return especializacionUpdate()
