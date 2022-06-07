@@ -13,9 +13,9 @@ class Query(Connection):
         cursor = cnx.cursor()
         # Define el inicio de la query
         try:
-            query = f"""SELECT *
+            query = f"""SELECT * , paciente.nombre as paciente_name,paciente.apellido as paciente_apellido
             FROM paciente
-            INNER JOIN  diagnostico ON diagnostico.fk_pac_id= paciente.pk_pac_id
+            INNER JOIN  diagnostico ON diagnostico.fk_paciente = paciente.pk_pac_id
             INNER JOIN paciente_doctor ON paciente_doctor.pk_pac_id= paciente.pk_pac_id
             INNER JOIN doctor ON paciente_doctor.pk_doctor_id= doctor.pk_doctor_id
             INNER JOIN especializacion ON especializacion.fk_doctor= doctor.pk_doctor_id 
@@ -29,7 +29,7 @@ class Query(Connection):
             return lista
         except Exception as e:
             print(e)
-            return "prueba"
+            return f"prueba {e}"
             
     def buscarDoctor(self, datosBuscar):
         cnx = self.connect()
@@ -51,11 +51,12 @@ class Query(Connection):
             print(e)
             return "prueba"
 
-    def busacar(self, datosBuscar):
+    def buscar(self, tabla,datosBuscar):
         cnx = self.connect()
         cursor = cnx.cursor()
         try:
-            query= f"""SELECT * FROM company {f" WHERE {datosBuscar[0][0]} = '{str(datosBuscar[0][1])}'" if datosBuscar else "" } order by pk_company"""
+            query= f"""SELECT * FROM {tabla} {f" WHERE {datosBuscar[0][0]} = '{str(datosBuscar[0][1])}'" if datosBuscar else "" }"""
+            print(query)
             cursor.execute(query)
             cnx.commit()
             lista = [dict((cursor.description[i][0], value) \
