@@ -29,20 +29,17 @@ def doctor():
 
 def doctorInsert():
     try:
-        resp= {}
-        datos= request.json
-        if (datos):
-            doctor = query_helper.doctorInsert(datos)
-            if(doctor>0):
-                resp = {"doctor": doctor[0]}
-                datos['pk_doctor_id'] = doctor[0]['pk_doctor_id']
-                especializacion = query_helper.especializacionInsert(datos)
-                if (especializacion>0):
-                    resp = { **resp, especializacion:especializacion[0]}
-                    datos['pk_esp_id'] = especializacion[0]['pk_esp_id']
-        return jsonify(resp)
-    except:
-        return  print('Falla de query Insert')
+        if not request.json:
+            raise Exception("Request con body vacio")
+        Data = request.json
+    except Exception as e :
+        return f"{e}"
+    
+    try:
+        query=query_helper.insertar("paciente",Data)
+        return jsonify(query)
+    except Exception as e:
+        return f" error {e}"
 
 def doctorUpdate():
     try:
@@ -58,6 +55,31 @@ def doctorUpdate():
         return jsonify(query)
     except Exception as e:
         return f" error {e}"
+
+def especializacion():
+    try:
+        query = query_helper.especializacion()
+        print(query)
+        return jsonify(query)
+        
+    except:
+        return jsonify("fallo conexion")
+
+def especializacionInsert():
+    try:
+        if not request.json:
+            raise Exception("Request con body vacio")
+        Data = request.json
+    except Exception as e :
+        return f"{e}"
+    
+    try:
+        query=query_helper.insertar("paciente",Data)
+        return jsonify(query)
+    except Exception as e:
+        return f" error {e}"
+        
+
 def especializacionUpdate():
     try:
         if not request.json:
@@ -79,6 +101,12 @@ def cruDoctor():
     elif request.method == "GET":
         return doctor()
     elif request.method == "PUT":
-        return doctorUpdate(), especializacionUpdate()
-       
+        return doctorUpdate()
 
+def cruEspecializacion():
+    if request.method == "POST":
+        return doctorInsert()
+    elif request.method == "GET":
+        return doctor()
+    elif request.method == "PUT":
+        return especializacionUpdate()
