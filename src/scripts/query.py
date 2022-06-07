@@ -50,33 +50,51 @@ INNER JOIN especializacion ON especializacion.fk_doctor= doctor.pk_doctor_id
     def insertar(self, tabla ,datoModificar):
         cnx = self.connect()
         cursor = cnx.cursor()
-        var=list(datoModificar)
-        datos=[]
-        for k in datoModificar:
-            datos.append(str(datoModificar[str(k)]))
-
-        var_text=", ".join(var)
-        datos_text="','".join(datos)
-
-        
-        
+        # Define el inicio de la query
         try:
-            query= f""" INSERT INTO {tabla} ({var_text}) VALUES ('{datos_text}') RETURNING * ;"""
+            query = f"""INSERT INTO public.doctor(
+                pk_doctor_id, nombre, apellido)
+                VALUES ({datos['pk_doctor_id']}, '{datos['nombre']}', '{datos['apellido']}')
+                RETURNING *
+                ;
+                ;"""
             print(query)
             cursor.execute(query)
             cnx.commit()
-            lista = [dict((cursor.description[i][0], value) \
-               for i, value in enumerate(row)) for row in cursor.fetchall()]
+            lista = [dict((cursor.description[i][0], value)
+                          for i, value in enumerate(row)) for row in cursor.fetchall()]
             self.closeConnection(cnx)
+            print(lista)
             return lista
         except Exception as e:
             print(e)
-            return f"error {e}"
-
-    def modificar(self, tabla,datosBuscar, datoModificar):
+            return "error doctorInsert"
+    def especializacionInsert(self, datos):
         cnx = self.connect()
         cursor = cnx.cursor()
+        # Define el inicio de la query
+        try:
+            query = f"""INSERT INTO public.especializacion(
+                pk_esp_id, descripcion, fk_doctor_id)
+                VALUES ({datos['pk_esp_id']}, '{datos['descripcion']}', '{datos['pk_doctor_id']}')
+                RETURNING *
+                ;
+                ;"""
+            print(query)
+            cursor.execute(query)
+            cnx.commit()
+            lista = [dict((cursor.description[i][0], value)
+                          for i, value in enumerate(row)) for row in cursor.fetchall()]
+            self.closeConnection(cnx)
+            print(lista)
+            return lista
+        except Exception as e:
+            print(e)
+            return "error doctorInsert"
 
+    def update(self, tabla,datosBuscar, datoModificar):
+        cnx = self.connect()
+        cursor = cnx.cursor()
         try:
             for k in datoModificar:
                 query= f""" UPDATE {tabla} SET  {  f"{k} = '{str(datoModificar[str(k)])}'"}   WHERE {datosBuscar[0][0]} = {datosBuscar[0][1]} RETURNING * ;"""
@@ -90,3 +108,4 @@ INNER JOIN especializacion ON especializacion.fk_doctor= doctor.pk_doctor_id
         except Exception as e:
             print(e)
             return f"error {e}"
+    
