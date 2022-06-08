@@ -10,9 +10,11 @@ banca.add_url_rule(
 banca.add_url_rule(
     '/diagnostico', view_func=controllers.listaFuntionDiagnostico, methods=['GET','POST','PUT'])
 banca.add_url_rule(
-     '/especializacion', view_func=controllers.cruEspecializacion, methods=['POST','PUT'])
+     '/especializacion', view_func=controllers.cruEspecializacion, methods=['GET','POST','PUT'])
 banca.add_url_rule(
-     '/doc_pac', view_func=controllers.cruDocPac, methods=['POST','PUT'])
+     '/doc_pac', view_func=controllers.cruDocPac, methods=['GET','POST','PUT'])
+banca.add_url_rule(
+     '/fulldata', view_func=controllers.dataCompleta, methods=['GET'])
 
 
 

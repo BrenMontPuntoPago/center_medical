@@ -13,14 +13,16 @@ class Query(Connection):
         cursor = cnx.cursor()
         # Define el inicio de la query
         try:
-            query = f"""SELECT * , paciente.nombre as paciente_name,paciente.apellido as paciente_apellido
+            query = f"""SELECT * , paciente.nombre as paciente_name,paciente.apellido as paciente_apellido 
             FROM paciente
-            INNER JOIN  diagnostico ON diagnostico.fk_paciente = paciente.pk_pac_id
-            INNER JOIN paciente_doctor ON paciente_doctor.pk_pac_id= paciente.pk_pac_id
-            INNER JOIN doctor ON paciente_doctor.pk_doctor_id= doctor.pk_doctor_id
-            INNER JOIN especializacion ON especializacion.fk_doctor= doctor.pk_doctor_id 
+            FULL JOIN  diagnostico ON diagnostico.fk_paciente = paciente.pk_paciente_id
+            FULL JOIN paciente_doctor ON paciente_doctor.pk_pac_id= paciente.pk_paciente_id
+            FULL JOIN doctor ON paciente_doctor.pk_doctor_id= doctor.pk_doctor_id
+            FULL JOIN especializacion ON especializacion.fk_doctor= doctor.pk_doctor_id 
             {f" WHERE paciente.{datosBuscar[0][0]} = '{str(datosBuscar[0][1])}'" if datosBuscar else "" }
-            ;"""
+            GROUP BY paciente.pk_paciente_id ;"""
+            # query= f"""SELECT * FROM paciente {f" WHERE {datosBuscar[0][0]} = '{str(datosBuscar[0][1])}'" if datosBuscar else "" }"""
+            
             cursor.execute(query)
             cnx.commit()
             lista = [dict((cursor.description[i][0], value)
@@ -38,7 +40,7 @@ class Query(Connection):
         try:
             query = f"""SELECT *
             FROM doctor
-            INNER JOIN especializacion ON especializacion.fk_doctor_id= doctor.pk_doctor_id
+            FULL JOIN especializacion ON especializacion.fk_doctor= doctor.pk_doctor_id
             {f" WHERE doctor.{datosBuscar[0][0]} = '{str(datosBuscar[0][1])}'" if datosBuscar else "" }
             ;"""
             cursor.execute(query)
@@ -55,7 +57,7 @@ class Query(Connection):
         cnx = self.connect()
         cursor = cnx.cursor()
         try:
-            query= f"""SELECT * FROM {tabla} {f" WHERE {datosBuscar[0][0]} = '{str(datosBuscar[0][1])}'" if datosBuscar else "" }"""
+            query= f"""SELECT * FROM {tabla} {f" WHERE {datosBuscar[0][0]} = '{str(datosBuscar[0][1])} '" if datosBuscar else "" } """
             print(query)
             cursor.execute(query)
             cnx.commit()

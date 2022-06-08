@@ -31,7 +31,7 @@ def getPasientes():
         return f"{e}"
     
     try:
-        query=query_helper.BuscarPaciente(args)
+        query=query_helper.buscar("paciente",args)
         return jsonify(query)
     except Exception as e:
         return f" error {e}"
@@ -155,7 +155,11 @@ def doctorUpdate():
 
 def especializacion():
     try:
-        query = query_helper.especializacion()
+        args=list(request.args.items())
+    except Exception as e :
+        return f"{e}"
+    try:
+        query = query_helper.buscar("especializacion",args)
         print(query)
         return jsonify(query)
         
@@ -191,7 +195,20 @@ def especializacionUpdate():
         return jsonify(query)
     except Exception as e:
         return f" error {e}"
-    
+def PacDoc():
+    try:
+        args=list(request.args.items())
+    except Exception as e :
+        return f"{e}"
+    try:
+        query = query_helper.buscar("paciente_doctor    ",args)
+        print(query)
+        return jsonify(query)
+        
+    except:
+        return jsonify("fallo conexion")
+
+   
 def DocPacInsert():
     try:
         if not request.json:
@@ -235,9 +252,25 @@ def cruEspecializacion():
         return especializacionInsert()
     elif request.method == "PUT":
         return especializacionUpdate()
+    elif request.method == "GET":
+        return especializacion()
 
 def cruDocPac():
     if request.method == "POST":
         return DocPacInsert()
     elif request.method == "PUT":
         return DocPacUpdate()
+    elif request.method == "GET":
+        return PacDoc()
+
+def dataCompleta():
+    try:
+        args=list(request.args.items())
+    except Exception as e :
+        return f"{e}"
+    
+    try:
+        query=query_helper.BuscarPaciente(args)
+        return jsonify(query)
+    except Exception as e:
+        return f" error {e}"
