@@ -13,14 +13,10 @@ class Query(Connection):
         cursor = cnx.cursor()
         # Define el inicio de la query
         try:
-            query = f"""SELECT * , paciente.nombre as paciente_name,paciente.apellido as paciente_apellido 
-            FROM paciente
-            FULL JOIN  diagnostico ON diagnostico.fk_paciente = paciente.pk_paciente_id
-            FULL JOIN paciente_doctor ON paciente_doctor.pk_pac_id= paciente.pk_paciente_id
-            FULL JOIN doctor ON paciente_doctor.pk_doctor_id= doctor.pk_doctor_id
-            FULL JOIN especializacion ON especializacion.fk_doctor= doctor.pk_doctor_id 
-            {f" WHERE paciente.{datosBuscar[0][0]} = '{str(datosBuscar[0][1])}'" if datosBuscar else "" }
-            GROUP BY paciente.pk_paciente_id ;"""
+            query = f"""SELECT * FROM paciente
+            INNER JOIN paciente_doctor ON paciente_doctor.pk_pac_id= paciente.pk_paciente_id
+            INNER JOIN doctor ON paciente_doctor.pk_doctor_id= doctor.pk_doctor_id 
+            {f" WHERE paciente.{datosBuscar[0][0]} = '{str(datosBuscar[0][1])}'" if datosBuscar else "" } ;"""
             # query= f"""SELECT * FROM paciente {f" WHERE {datosBuscar[0][0]} = '{str(datosBuscar[0][1])}'" if datosBuscar else "" }"""
             
             cursor.execute(query)

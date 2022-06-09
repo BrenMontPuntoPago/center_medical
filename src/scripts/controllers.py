@@ -270,6 +270,18 @@ def dataCompleta():
         return f"{e}"
     
     try:
+        query=query_helper.buscar("doctor",args)
+        return jsonify(query)
+    except Exception as e:
+        return f" error {e}"
+
+def dataCompletaa():
+    try:
+        args=list(request.args.items())
+    except Exception as e :
+        return f"{e}"
+    
+    try:
         query=query_helper.BuscarPaciente(args)
         return jsonify(query)
     except Exception as e:

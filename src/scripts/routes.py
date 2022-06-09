@@ -15,6 +15,8 @@ banca.add_url_rule(
      '/doc_pac', view_func=controllers.cruDocPac, methods=['GET','POST','PUT'])
 banca.add_url_rule(
      '/fulldata', view_func=controllers.dataCompleta, methods=['GET'])
+banca.add_url_rule(
+     '/datacompleta', view_func=controllers.dataCompletaa, methods=['GET'])
 
 
 
